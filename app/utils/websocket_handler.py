@@ -38,7 +38,7 @@ class WebSocketHandler:
         if not self.is_connected:
             raise ConnectionError("Not connected to WebSocket server")
         
-        encrypted_data = self.encryption.encrypt_message(message)
+        encrypted_data = self.encryption.encrypt(message)
         await self.websocket.send(encrypted_data)
         logger.debug(f"Sent message: {message}")
 
@@ -48,6 +48,6 @@ class WebSocketHandler:
             raise ConnectionError("Not connected to WebSocket server")
         
         encrypted_data = await self.websocket.recv()
-        message = self.encryption.decrypt_message(encrypted_data)
+        message = self.encryption.decrypt(encrypted_data)
         logger.debug(f"Received message: {message}")
         return message

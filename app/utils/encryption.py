@@ -1,17 +1,27 @@
-from cryptography.fernet import Fernet
-import json
 from ..config import settings
+import base64
+import hashlib
+from Crypto.Cipher import AES
+from Crypto.Util.Padding import pad, unpad
+import base64
+import hashlib
 
 class Encryption:
+
     def __init__(self):
-        self.fernet = Fernet(settings.ENCRYPTION_KEY)
+        password = settings.ENCRYPTION_KEY_PASSWORD.encode()
+        self.key = hashlib.sha256(password).digest()
 
-    def encrypt_message(self, message: dict) -> bytes:
-        """Encrypt a dictionary message to bytes"""
-        json_data = json.dumps(message)
-        return self.fernet.encrypt(json_data.encode())
+    def encrypt(self, plaintext):
+        cipher = AES.new(self.key, AES.MODE_CBC)
+        iv = cipher.iv
+        ciphertext = cipher.encrypt(pad(plaintext.encode(), AES.block_size))
+        # Combine IV and ciphertext, encode to base64
+        return base64.b64encode(iv + ciphertext).decode()
 
-    def decrypt_message(self, encrypted_data: bytes) -> dict:
-        """Decrypt bytes to a dictionary message"""
-        decrypted_data = self.fernet.decrypt(encrypted_data)
-        return json.loads(decrypted_data.decode())
+    def decrypt(self, encrypted_text):
+        raw = base64.b64decode(encrypted_text)
+        iv = raw[:AES.block_size]
+        ciphertext = raw[AES.block_size:]
+        cipher = AES.new(self.key, AES.MODE_CBC, iv)
+        return unpad(cipher.decrypt(ciphertext), AES.block_size).decode()

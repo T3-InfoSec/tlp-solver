@@ -26,7 +26,7 @@ class SolverClientApp:
         
         try:
             while self.running:
-                message = await self.ws_handler.receive_message()
+                message = await self.ws_handler.receive_message()                          
                 await self.message_handler.handle_message(message)
         except Exception as e:
             logger.error(f"Error in main loop: {str(e)}")
