@@ -14,7 +14,6 @@ async def tlp_solver(baseg, t, product):
         for _ in range(int(t_mpz)):
             slow_power = prime_gen.mod_exp(slow_power, gmpy2.mpz(2), product_mpz)
         return slow_power
-
     # Run the compute_slow_power function in a thread pool using run_in_executor
     loop = asyncio.get_event_loop()
     slow_power = await loop.run_in_executor(None, compute_slow_power)
