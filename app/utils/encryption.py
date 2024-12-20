@@ -9,7 +9,7 @@ import hashlib
 class Encryption:
 
     def __init__(self):
-        password = settings.ENCRYPTION_KEY_PASSWORD.encode()
+        password = settings.PLACEHOLDER_ENCRYPTION_KEY_PASSWORD.encode()
         self.key = hashlib.sha256(password).digest()
 
     def encrypt(self, plaintext):
