@@ -1,0 +1,9 @@
+uvicorn
+sqlalchemy
+pydantic
+pydantic-settings
+cryptography
+python-dotenv
+websockets
+typing-extensions
+pycryptodome
